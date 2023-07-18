@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	repo   = "https://github.com/FlowingSPDG/Got5.git"
+	repo   = "https://github.com/xe1os/Got5.git"
 	branch = "unknown"
 	commit = "unknown"
 )
