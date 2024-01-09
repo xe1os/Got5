@@ -1,16 +1,15 @@
-package route
+package fiberroute
 
 import (
 	"bytes"
 	"strconv"
 
+	got5 "github.com/FlowingSPDG/Got5"
 	"github.com/gofiber/fiber/v2"
-
-	"github.com/FlowingSPDG/Got5/controller"
 )
 
 // CheckDemoAuth 認証用ハンドラ
-func CheckDemoAuth(auth controller.Auth) func(c *fiber.Ctx) error {
+func CheckDemoAuth(auth got5.Auth) func(c *fiber.Ctx) error {
 	return (func(c *fiber.Ctx) error { // Verifyをかける
 		filename := c.Get("Get5-FileName")
 		matchID := c.Get("Get5-MatchId")
@@ -25,14 +24,7 @@ func CheckDemoAuth(auth controller.Auth) func(c *fiber.Ctx) error {
 			}
 		}
 
-		serverIDstr := c.Get("Get5-ServerId")
-		var serverID int
-		if serverIDstr != "" {
-			serverID, err = strconv.Atoi(serverIDstr)
-			if err != nil {
-				return c.Status(fiber.StatusBadRequest).SendString(err.Error()) // カスタムエラーを返したい
-			}
-		}
+		serverID := c.Get("Get5-ServerId")
 
 		reqAuth := c.Get("Authorization")
 		if err := auth.CheckDemoAuth(c.Context(), filename, matchID, mapNum, serverID, reqAuth); err != nil {
@@ -44,7 +36,7 @@ func CheckDemoAuth(auth controller.Auth) func(c *fiber.Ctx) error {
 
 // DemoUploadHandler POST CS:GO dem file.
 // アップロードされたdemファイルを制御するハンドラ
-func DemoUploadHandler(uploader controller.DemoUploader) func(c *fiber.Ctx) error {
+func DemoUploadHandler(uploader got5.DemoUploader) func(c *fiber.Ctx) error {
 	return (func(c *fiber.Ctx) error {
 		// アップロードを実施
 		br := bytes.NewBuffer(c.Body())
